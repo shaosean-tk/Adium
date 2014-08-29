@@ -1,0 +1,1558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="1535604588">
+ <ObjName>AdiumViewerStyle</ObjName>
+ <ObjContainerID>986504703</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(path As FolderItem)</SourceLine>
+   <SourceLine>me.mPath = path</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (InStr(path.Name, ".css") &gt; 0) then  // loading with a variant path</SourceLine>
+   <SourceLine>me.mStylePath = MessageStylePathForVariant(path)</SourceLine>
+   <SourceLine>me.mVariantPath = path</SourceLine>
+   <SourceLine>else  // loading with the .AdiumMessageStyle path</SourceLine>
+   <SourceLine>me.mStylePath = path</SourceLine>
+   <SourceLine>me.mVariantPath = Nil</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM infoDocument As NEW XmlDocument(me.ContentsFolder.Child("Info.plist"))</SourceLine>
+   <SourceLine>DIM documentNode As XmlNode = infoDocument.FirstChild.FirstChild</SourceLine>
+   <SourceLine>DIM childNode As XmlNode = documentNode.FirstChild</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>while childNode &lt;&gt; Nil</SourceLine>
+   <SourceLine>DIM key As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (childNode.Name = "key") then</SourceLine>
+   <SourceLine>key = "m" + Replace(childNode.FirstChild.Value, " ", "")</SourceLine>
+   <SourceLine>childNode = childNode.NextSibling</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (childNode.Name = "true") OR (childNode.Name = "false") then</SourceLine>
+   <SourceLine>me.SetValueForKey (childNode.Name = "true"), key</SourceLine>
+   <SourceLine>elseif (childNode.Name = "integer") then</SourceLine>
+   <SourceLine>me.SetValueForKey Val(childNode.FirstChild.Value), key</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.SetValueForKey childNode.FirstChild.Value, key</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>childNode = childNode.NextSibling</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.LoadVariants</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Escape</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Escape(value As String) As String</SourceLine>
+   <SourceLine>value = ReplaceAll(value, "\", "\\")   // slashes</SourceLine>
+   <SourceLine>value = ReplaceAll(value, """", "\""")  // quotes</SourceLine>
+   <SourceLine>value = ReplaceAll(value, "'", "\'")     // apostrophes</SourceLine>
+   <SourceLine>value = ReplaceAll(value, Chr(9), "") // TAB</SourceLine>
+   <SourceLine>value = ReplaceLineEndings(value, "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return value</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>value As String</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LoadVariants</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub LoadVariants()</SourceLine>
+   <SourceLine>if (me.VariantPath = Nil) then</SourceLine>
+   <SourceLine>if (me.MessageViewVersion &lt; 3) then  // view versions 0, 1 or 2</SourceLine>
+   <SourceLine>me.mVariantPath = me.ResourcesFolder.Child("main.css")</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>if (me.DefaultVariant = "") then</SourceLine>
+   <SourceLine>me.mVariantPath = me.ResourcesFolder.Child("main.css")</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mVariantPath = me.VariantsFolder.Child(me.DefaultVariant + ".css")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>MessageStylePathForVariant</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function MessageStylePathForVariant(path As FolderItem) As FolderItem</SourceLine>
+   <SourceLine>DIM returnValue As FolderItem = path</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>do until (InStr(returnValue.Name, ".AdiumMessageStyle") &gt; 0)</SourceLine>
+   <SourceLine>returnValue = returnValue.Parent</SourceLine>
+   <SourceLine>loop</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>FolderItem</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Open</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Open(path As FolderItem) As AdiumViewerStyle</SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) then</SourceLine>
+   <SourceLine>Return NEW AdiumViewerStyle(path)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>AdiumViewerStyle</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>SetValueForKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SetValueForKey(value As Variant, key As String)</SourceLine>
+   <SourceLine>DIM properties() As Introspection.PropertyInfo = Introspection.GetType(me).GetProperties</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (UBound(properties) &gt; -1) then</SourceLine>
+   <SourceLine>for i as Integer = 0 to UBound(properties)</SourceLine>
+   <SourceLine>if (properties(i).Name = key) then</SourceLine>
+   <SourceLine>properties(i).Value(me) = value</SourceLine>
+   <SourceLine>exit for i</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>value As Variant, key As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Property>
+  <ItemName>CFBundleIdentifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>CFBundleIdentifier As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>CFBundleIdentifier As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mCFBundleIdentifier</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>CFBundleName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>CFBundleName As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>CFBundleName As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mCFBundleName</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>ContentsFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ContentsFolder As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ContentsFolder As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem = me.StylePath.Child("Contents")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (tReturn = Nil) OR (not tReturn.Exists) then</SourceLine>
+   <SourceLine>tReturn = me.StylePath</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DefaultFontFamily</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DefaultFontFamily As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DefaultFontFamily As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDefaultFontFamily</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DefaultFontSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DefaultFontSize As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DefaultFontSize As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDefaultFontSize</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DefaultVariant</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DefaultVariant As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DefaultVariant As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDefaultVariant</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DisableCombineConsecutive</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisableCombineConsecutive As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisableCombineConsecutive As Boolean</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDisableCombineConsecutive</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DisableCustomBackground</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisableCustomBackground As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisableCustomBackground As Boolean</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDisableCustomBackground</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>DisplayNameForNoVariant</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisplayNameForNoVariant As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisplayNameForNoVariant As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mDisplayNameForNoVariant = "") then</SourceLine>
+   <SourceLine>me.mDisplayNameForNoVariant = "Default"</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>Return me.mDisplayNameForNoVariant</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Footer</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Footer As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Footer As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mFooter = "") then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Footer.html").Exists) then</SourceLine>
+   <SourceLine>me.mFooter = me.Escape(me.ResourcesFolder.Child("Footer.html").OpenAsText)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mFooter</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' DIM tReturn As String</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>' if (me.ResourcesFolder.Child("Footer.html").Exists) then</SourceLine>
+   <SourceLine>' tReturn = me.ResourcesFolder.Child("Footer.html").OpenAsText</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>' Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Header</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Header As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Header As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mHeader = "") then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Header.html").Exists) then</SourceLine>
+   <SourceLine>me.mHeader = me.Escape(me.ResourcesFolder.Child("Header.html").OpenAsText)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mHeader</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' DIM tReturn As String</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>' if (me.ResourcesFolder.Child("Header.html").Exists) then</SourceLine>
+   <SourceLine>' tReturn = me.ResourcesFolder.Child("Header.html").OpenAsText</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>' Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>IncomingContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>IncomingContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>IncomingContent As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mIncomingContent = "") then</SourceLine>
+   <SourceLine>if (me.IncomingFolder &lt;&gt; Nil) AND (me.IncomingFolder.Child("Content.html").Exists) then</SourceLine>
+   <SourceLine>me.mIncomingContent = me.Escape(me.IncomingFolder.Child("Content.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mIncomingContent = me.Escape(me.ResourcesFolder.Child("Content.html").OpenAsText)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mIncomingContent</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>IncomingFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>IncomingFolder As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>IncomingFolder As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Incoming").Exists) then</SourceLine>
+   <SourceLine>tReturn = me.ResourcesFolder.Child("Incoming")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>IncomingNextContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>IncomingNextContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>IncomingNextContent As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mIncomingNextContent = "") then</SourceLine>
+   <SourceLine>if (me.IncomingFolder &lt;&gt; Nil) AND (me.IncomingFolder.Child("NextContent.html").Exists) then</SourceLine>
+   <SourceLine>me.mIncomingNextContent = me.Escape(me.IncomingFolder.Child("NextContent.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mIncomingNextContent = me.IncomingContent</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mIncomingNextContent</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Input</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Input As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Input As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mInput = "") then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("input.html").Exists) then</SourceLine>
+   <SourceLine>me.mInput = me.Escape(me.ResourcesFolder.Child("Input.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mInput = me.OutgoingContent</SourceLine>
+   <SourceLine>me.mInput = Replace(me.mInput, "%message%", "&lt;div id=""input"" height=""100%"" width=""100%"" contentEditable=""true""&gt;&lt;/div&gt;")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mInput</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mCFBundleIdentifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mCFBundleIdentifier As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mCFBundleIdentifier As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mCFBundleName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mCFBundleName As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mCFBundleName As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDefaultFontFamily</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDefaultFontFamily As String = "System"</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDefaultFontFamily As String = "System"</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDefaultFontSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDefaultFontSize As Integer = 13</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDefaultFontSize As Integer = 13</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDefaultVariant</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDefaultVariant As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDefaultVariant As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDisableCombineConsecutive</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDisableCombineConsecutive As Boolean = FALSE</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDisableCombineConsecutive As Boolean = FALSE</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDisableCustomBackground</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDisableCustomBackground As Boolean = FALSE</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDisableCustomBackground As Boolean = FALSE</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDisplayNameForNoVariant</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDisplayNameForNoVariant As String = "Default"</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDisplayNameForNoVariant As String = "Default"</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>MessageViewVersion</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>MessageViewVersion As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>MessageViewVersion As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mMessageViewVersion</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mFooter</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mFooter As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mFooter As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mHeader</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHeader As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHeader As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mIncomingContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mIncomingContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mIncomingContent As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mIncomingNextContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mIncomingNextContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mIncomingNextContent As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mInput</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInput As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInput As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mMessageViewVersion</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMessageViewVersion As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMessageViewVersion As Integer</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mOutgoingContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mOutgoingContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mOutgoingContent As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mOutgoingNextContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mOutgoingNextContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mOutgoingNextContent As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mShowUserIcons</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mShowUserIcons As Boolean = TRUE</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mShowUserIcons As Boolean = TRUE</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mStatus</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mStatus As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mStatus As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mStylePath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mStylePath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mStylePath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mTopic</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mTopic As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mTopic As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mVariantPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mVariantPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mVariantPath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>OutgoingContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>OutgoingContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>OutgoingContent As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mOutgoingContent = "") then</SourceLine>
+   <SourceLine>if (me.OutgoingFolder &lt;&gt; Nil) AND (me.OutgoingFolder.Child("Content.html").Exists) then</SourceLine>
+   <SourceLine>me.mOutgoingContent = me.Escape(me.OutgoingFolder.Child("Content.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mOutgoingContent = me.IncomingContent</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mOutgoingContent</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>OutgoingFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>OutgoingFolder As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>OutgoingFolder As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Outgoing").Exists) then</SourceLine>
+   <SourceLine>tReturn = me.ResourcesFolder.Child("Outgoing")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>OutgoingNextContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>OutgoingNextContent As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>OutgoingNextContent As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mOutgoingNextContent = "") then</SourceLine>
+   <SourceLine>if (me.OutgoingFolder &lt;&gt; Nil) AND (me.OutgoingFolder.Child("NextContent.html").Exists) then</SourceLine>
+   <SourceLine>me.mOutgoingNextContent = me.Escape(me.OutgoingFolder.Child("NextContent.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>if (me.IncomingFolder &lt;&gt; Nil) AND (me.IncomingFolder.Child("NextContent.html").Exists) then</SourceLine>
+   <SourceLine>me.mOutgoingNextContent = me.Escape(me.IncomingFolder.Child("NextContent.html").OpenAsText)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.mOutgoingNextContent = me.OutgoingContent</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mOutgoingNextContent</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Path</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Path As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Path As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mPath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>ResourcesFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ResourcesFolder As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ResourcesFolder As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem = me.ContentsFolder.Child("Resources")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (tReturn = Nil) OR (not tReturn.Exists) then</SourceLine>
+   <SourceLine>tReturn = me.StylePath.Child("Resources")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (tReturn = Nil) OR (not tReturn.Exists) then</SourceLine>
+   <SourceLine>tReturn = me.StylePath</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' Return me.StylePath.Child("Contents").Child("Resources")</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>ShowUserIcons</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ShowUserIcons As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ShowUserIcons As Boolean</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mShowUserIcons</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Status</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Status As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Status As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mStatus = "") then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Status.html").Exists) then</SourceLine>
+   <SourceLine>me.mStatus = me.Escape(me.ResourcesFolder.Child("Status.html").OpenAsText)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mStatus</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>StylePath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>StylePath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>StylePath As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mStylePath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Template</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Template As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Template As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As String = me.kTemplate</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Template.html").Exists) then</SourceLine>
+   <SourceLine>tReturn = me.ResourcesFolder.Child("Template.html").OpenAsText</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the base href path</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", me.ResourcesFolder.URLPath)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the css</SourceLine>
+   <SourceLine>if (tReturn.CountFields("%@") = 5) then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("main.css").Exists) then</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "@import url(""main.css"");")</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "")  // this is to workaround themes that do not have a main.css file</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>' if (me.VariantPath &lt;&gt; Nil) AND (me.VariantPath.Name &lt;&gt; "main.css") then</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", me.VariantPath.URLPath)</SourceLine>
+   <SourceLine>' else</SourceLine>
+   <SourceLine>' tReturn = tReturn.Replace("%@", "")</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>if (me.VariantPath &lt;&gt; Nil) AND (me.VariantPath.Name &lt;&gt; "main.css") then</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "variants/" + me.VariantPath.Name)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "main.css")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// header</SourceLine>
+   <SourceLine>' if (ShowHeader) then</SourceLine>
+   <SourceLine>' tReturn = tReturn.Replace("%@", me.Header)</SourceLine>
+   <SourceLine>' else</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "")</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// footer</SourceLine>
+   <SourceLine>' if (ShowFooter) then</SourceLine>
+   <SourceLine>' tReturn = tReturn.Replace("%@", me.Footer)</SourceLine>
+   <SourceLine>' else</SourceLine>
+   <SourceLine>tReturn = tReturn.Replace("%@", "")</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' ' if (ShowFooter) then</SourceLine>
+   <SourceLine>' ' tTemplate = tTemplate.Replace("%@", "&lt;div class='message' style=""position:fixed;left:0px;bottom:0px;height:48px;width:100%;background:#999;padding-left:8px;padding-right:8px;border-radius: 15px;margin-left:8x;margin-right:8px;"" contenteditable=""true""&gt;&lt;/div&gt;") // + _</SourceLine>
+   <SourceLine>' ' ' "&lt;iframe height='48' seamless&gt;&lt;/iframe&gt;" + _</SourceLine>
+   <SourceLine>' ' ' "&lt;/div&gt;")</SourceLine>
+   <SourceLine>' ' else</SourceLine>
+   <SourceLine>' ' tTemplate = tTemplate.Replace("%@", "")</SourceLine>
+   <SourceLine>' ' end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' tReturn = tReturn.Replace("&lt;/body&gt;", "&lt;/body&gt;&lt;script type=""text/javascript"" defer=""defer""&gt;setTimeout(function() { Callback('DocumentComplete', '', ''); }, 1);&lt;/script&gt;&lt;/body&gt;")</SourceLine>
+   <SourceLine>' "document.addEventListener(""click"", function(e) { Callback(""oink"", event.target.href); }, false); &lt;/script&gt;&lt;/body&gt;")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Topic</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Topic As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Topic As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if (me.mTopic = "") then</SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Topic.html").Exists) then</SourceLine>
+   <SourceLine>me.mTopic = me.Escape(me.ResourcesFolder.Child("Topic.html").OpenAsText)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.mTopic</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>VariantPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>VariantPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>VariantPath As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mVariantPath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>VariantsFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>VariantsFolder As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>VariantsFolder As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.ResourcesFolder.Child("Variants").Exists) then</SourceLine>
+   <SourceLine>tReturn = me.ResourcesFolder.Child("Variants")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>CFBundleIdentifier</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>CFBundleName</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DefaultFontFamily</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DefaultFontSize</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>13</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DefaultVariant</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DisableCombineConsecutive</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>FALSE</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DisableCustomBackground</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>FALSE</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DisplayNameForNoVariant</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Footer</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Header</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>IncomingContent</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>IncomingNextContent</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Input</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>MessageViewVersion</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>OutgoingContent</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>OutgoingNextContent</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ShowUserIcons</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>TRUE</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Status</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Template</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Topic</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>kTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef><Hex bytes="10807">3C21444F43545950452048544D4C205055424C494320222D2F2F5733432F2F4454442048544D4C20342E30312F2F454E222022687474703A2F2F7777772E77332E6F72672F54522F68746D6C342F7374726963742E647464223E0A3C68746D6C3E0A3C686561643E0A093C6D65746120687474702D65717569763D22636F6E74656E742D747970652220636F6E74656E743D22746578742F68746D6C3B20636861727365743D7574662D3822202F3E0A093C6261736520687265663D222540223E0A093C73637269707420747970653D22746578742F6A617661736372697074222064656665723D226465666572223E0A09092F2F204E4F54453A0A09092F2F20416E792070657263656E74207369676E7320696E20746869732066696C65206D7573742062652065736361706564210A09092F2F205573652074776F20657363617065207369676E73202825252920746F20646973706C61792069742C207468697320697320706173736564207468726F756768206120666F726D61742063616C6C210A09090A090966756E6374696F6E20617070656E6448544D4C2868746D6C29207B0A090909766172206E6F6465203D20646F63756D656E742E676574456C656D656E744279496428224368617422293B0A0909097661722072616E6765203D20646F63756D656E742E63726561746552616E676528293B0A09090972616E67652E73656C6563744E6F6465286E6F6465293B0A09090976617220646F63756D656E74467261676D656E74203D2072616E67652E637265617465436F6E7465787475616C467261676D656E742868746D6C293B0A0909096E6F64652E617070656E644368696C6428646F63756D656E74467261676D656E74293B0A09097D0A0A09092F2F206120636F616C65736365642048544D4C206F626A656374206275666665727320616E64206F75747075747320444F4D206F626A6563747320656E206D617373652E0A09092F2F2073617665732041204C4F54206F662043535320726563616C63756C6174696F6E2074696D65207768656E206C6F6164696E67206D616E79206D657373616765732E0A09092F2F202865782E2061206C6F6E6720747769747465722074696D656C696E65290A090966756E6374696F6E20436F616C657363656448544D4C2829207B0A0909097661722073656C66203D20746869733B0A090909746869732E667261676D656E74203D20646F63756D656E742E637265617465446F63756D656E74467261676D656E7428293B0A090909746869732E74696D656F75744944203D20303B0A090909746869732E636F616C65736365526F756E6473203D20303B0A090909746869732E6973436F616C657363696E67203D2066616C73653B0A090909746869732E6973436F6E7365637574697665203D20756E646566696E65643B0A090909746869732E73686F756C645363726F6C6C203D20756E646566696E65643B0A0A09090976617220617070656E64456C656D656E74203D2066756E6374696F6E2028656C656D29207B0A09090909646F63756D656E742E676574456C656D656E744279496428224368617422292E617070656E644368696C6428656C656D293B0A0909097D3B0A0A09090966756E6374696F6E206F757470757448544D4C2829207B0A0909090976617220696E73657274203D20646F63756D656E742E676574456C656D656E74427949642822696E7365727422293B0A090909096966282121696E736572742026262073656C662E6973436F6E736563757469766529207B0A0909090909696E736572742E706172656E744E6F64652E7265706C6163654368696C642873656C662E667261676D656E742C20696E73657274293B0A090909097D20656C7365207B0A0909090909696628696E73657274290A090909090909696E736572742E706172656E744E6F64652E72656D6F76654368696C6428696E73657274293B0A09090909092F2F20696E736572742074686520646F63756D656E74467261676D656E7420696E746F20746865206C69766520444F4D0A0909090909617070656E64456C656D656E742873656C662E667261676D656E74293B0A090909097D0A09090909616C69676E436861742873656C662E73686F756C645363726F6C6C293B0A0A090909092F2F20726573657420737461746520746F20656D7074792F6E6F6E2D636F616C657363696E670A0909090973656C662E73686F756C645363726F6C6C203D20756E646566696E65643B0A0909090973656C662E6973436F6E7365637574697665203D20756E646566696E65643B0A0909090973656C662E6973436F616C657363696E67203D2066616C73653B0A0909090973656C662E636F616C65736365526F756E6473203D20303B0A0909097D0A0A0909092F2F206372656174657320616E642072657475726E732061206E657720646F63756D656E74467261676D656E742C20636F6E7461696E696E6720616C6C20636F6E74656E74206E6F6465730A0909092F2F2077686963682063616E20626520696E73657274656420617320612073696E676C65206E6F64652E0A09090966756E6374696F6E2063726561746548544D4C4E6F64652868746D6C29207B0A090909097661722072616E6765203D20646F63756D656E742E63726561746552616E676528293B0A0909090972616E67652E73656C6563744E6F646528646F63756D656E742E676574456C656D656E74427949642822436861742229293B0A0909090972657475726E2072616E67652E637265617465436F6E7465787475616C467261676D656E742868746D6C293B0A0909097D0A0A0909092F2F2072656D6F76657320666972737420696E73657274206E6F64652066726F6D2074686520696E7465726E616C20667261676D656E742E0A09090966756E6374696F6E20726D496E736572744E6F64652829207B0A0909090976617220696E73657274203D2073656C662E667261676D656E742E717565727953656C6563746F72282223696E7365727422293B0A09090909696628696E73657274290A0909090909696E736572742E706172656E744E6F64652E72656D6F76654368696C6428696E73657274293B0A0909097D0A0A09090966756E6374696F6E2073657453686F756C645363726F6C6C28666C616729207B0A09090909696628666C616720262620756E646566696E6564203D3D3D2073656C662E73686F756C645363726F6C6C290A090909090973656C662E73686F756C645363726F6C6C203D20666C61673B0A0909097D0A0A0909092F2F20686F6F6B20696E206120637573746F6D206D6574686F6420746F20617070656E64206E657720646174610A0909092F2F20746F2074686520636861742E0A090909746869732E736574417070656E64456C656D656E744D6574686F64203D2066756E6374696F6E202866756E6329207B0A09090909696628747970656F662066756E63203D3D3D202766756E6374696F6E27290A0909090909617070656E64456C656D656E74203D2066756E633B0A0909097D0A0A0909092F2F202872652973746172742074686520636F616C657363696E672074696D65722E0A0909092F2F202020776520776169742032356D7320666F722061206E6577206D65737361676520746F20636F6D6520696E2E0A0909092F2F202020496620776520676574206F6E652C2072657374617274207468652074696D657220616E64207761697420616E6F746865722031306D732E0A0909092F2F2020204966206E6F742C2072756E206F757470757448544D4C28290A0909092F2F2020576520646F20746869732061206D6178696D756D206F66203430302074696D65732C20666F7220313073206D617820746861742063616E206265207370656E740A0909092F2F2020636F616C657363696E6720696E7075742C2073696E636520746869732077696C6C20626C6F636B20646973706C61792E0A090909746869732E636F616C65736365203D2066756E6374696F6E2829207B0A0909090977696E646F772E636C65617254696D656F75742873656C662E74696D656F75744944293B0A0909090973656C662E74696D656F75744944203D2077696E646F772E73657454696D656F7574286F757470757448544D4C2C203235293B0A0909090973656C662E6973436F616C657363696E67203D20747275653B0A0909090973656C662E636F616C65736365526F756E6473202B3D20313B0A09090909696628343030203C2073656C662E636F616C65736365526F756E6473290A090909090973656C662E63616E63656C28293B0A0909097D0A0A0909092F2F206966207765206E65656420746F20617070656E6420636F6E74656E7420696E746F20616E20696E73657274696F6E206469762C0A0909092F2F207765206E65656420746F20636C656172207468652062756666657220616E642063616E63656C207468652074696D656F75742E0A090909746869732E63616E63656C203D2066756E6374696F6E2829207B0A0909090969662873656C662E6973436F616C657363696E6729207B0A090909090977696E646F772E636C65617254696D656F75742873656C662E74696D656F75744944293B0A09090909096F757470757448544D4C28293B0A090909097D0A0909097D0A0A0A0909092F2F20636F616C6173656420616E616C6F677320746F2074686520676C6F62616C2066756E6374696F6E730A0A090909746869732E617070656E64203D2066756E6374696F6E2868746D6C2C2073686F756C645363726F6C6C29207B0A090909092F2F2069662077652073746172746564207468697320667261676D656E742077697468206120636F6E736563756174697665206D6573736167652C0A090909092F2F2063616E63656C20616E64206F7574707574206265666F726520776520636F6E74696E75650A0909090969662873656C662E6973436F6E736563757469766529207B0A090909090973656C662E63616E63656C28293B0A090909097D0A0909090973656C662E6973436F6E7365637574697665203D2066616C73653B0A09090909726D496E736572744E6F646528293B0A09090909766172206E6F6465203D2063726561746548544D4C4E6F64652868746D6C293B0A0909090973656C662E667261676D656E742E617070656E644368696C64286E6F6465293B0A0A090909096E6F6465203D206E756C6C3B0A0A0909090973657453686F756C645363726F6C6C2873686F756C645363726F6C6C293B0A0909090973656C662E636F616C6573636528293B0A0909097D0A0A090909746869732E617070656E644E657874203D2066756E6374696F6E2868746D6C2C2073686F756C645363726F6C6C29207B0A09090909696628756E646566696E6564203D3D3D2073656C662E6973436F6E7365637574697665290A090909090973656C662E6973436F6E7365637574697665203D20747275653B0A09090909766172206E6F6465203D2063726561746548544D4C4E6F64652868746D6C293B0A0909090976617220696E73657274203D2073656C662E667261676D656E742E717565727953656C6563746F72282223696E7365727422293B0A09090909696628696E7365727429207B0A0909090909696E736572742E706172656E744E6F64652E7265706C6163654368696C64286E6F64652C20696E73657274293B0A090909097D20656C7365207B0A090909090973656C662E667261676D656E742E617070656E644368696C64286E6F6465293B0A090909097D0A090909096E6F6465203D206E756C6C3B0A0909090973657453686F756C645363726F6C6C2873686F756C645363726F6C6C293B0A0909090973656C662E636F616C6573636528293B0A0909097D0A0A090909746869732E7265706C6163654C617374203D2066756E6374696F6E202868746D6C2C2073686F756C645363726F6C6C29207B0A09090909726D496E736572744E6F646528293B0A09090909766172206E6F6465203D2063726561746548544D4C4E6F64652868746D6C293B0A09090909766172206C6173744D657373616765203D2073656C662E667261676D656E742E6C6173744368696C643B0A090909096C6173744D6573736167652E706172656E744E6F64652E7265706C6163654368696C64286E6F64652C206C6173744D657373616765293B0A090909096E6F6465203D206E756C6C3B0A0909090973657453686F756C645363726F6C6C2873686F756C645363726F6C6C293B0A0909097D0A09097D0A090976617220636F616C657363656448544D4C3B0A0A09092F2F417070656E64696E67206E657720636F6E74656E7420746F20746865206D65737361676520766965770A090966756E6374696F6E20617070656E644D6573736167652868746D6C29207B0A0909097661722073686F756C645363726F6C6C3B0A0A0909092F2F204F6E6C792063616C6C206E656172426F74746F6D28292069662073686F756C64207363726F6C6C20697320756E646566696E65642E0A090909696628756E646566696E6564203D3D3D20636F616C657363656448544D4C2E73686F756C645363726F6C6C29207B0A0909090973686F756C645363726F6C6C203D206E656172426F74746F6D28293B0A0909097D20656C7365207B0A0909090973686F756C645363726F6C6C203D20636F616C657363656448544D4C2E73686F756C645363726F6C6C3B0A0909097D0A090909617070656E644D6573736167654E6F5363726F6C6C2868746D6C2C2073686F756C645363726F6C6C293B0A09097D0A0A090966756E6374696F6E20617070656E644D6573736167654E6F5363726F6C6C2868746D6C2C2073686F756C645363726F6C6C29207B0A09090973686F756C645363726F6C6C203D2073686F756C645363726F6C6C207C7C2066616C73653B0A0909092F2F20616C776179732074727920746F20636F616C65736365206E65772C206E6F6E2D677269757065642C206D657373616765730A090909636F616C657363656448544D4C2E617070656E642868746D6C2C2073686F756C645363726F6C6C290A09097D0A0A090966756E6374696F6E20617070656E644E6578744D6573736167652868746D6C297B0A0909097661722073686F756C645363726F6C6C3B0A090909696628756E646566696E6564203D3D3D20636F616C657363656448544D4C2E73686F756C645363726F6C6C29207B0A0909090973686F756C645363726F6C6C203D206E656172426F74746F6D28293B0A0909097D20656C7365207B0A0909090973686F756C645363726F6C6C203D20636F616C657363656448544D4C2E73686F756C645363726F6C6C3B0A0909097D0A090909617070656E644E6578744D6573736167654E6F5363726F6C6C2868746D6C2C2073686F756C645363726F6C6C293B0A09097D0A0A090966756E6374696F6E20617070656E644E6578744D6573736167654E6F5363726F6C6C2868746D6C2C2073686F756C645363726F6C6C297B0A09090973686F756C645363726F6C6C203D2073686F756C645363726F6C6C207C7C2066616C73653B0A0909092F2F206F6E6C792067726F7570206E657874206D6573736167657320696620776527726520616C726561647920636F616C657363696E6720696E7075740A090909636F616C657363656448544D4C2E617070656E644E6578742868746D6C2C2073686F756C645363726F6C6C293B0A09097D0A0A090966756E6374696F6E207265706C6163654C6173744D6573736167652868746D6C297B0A0909097661722073686F756C645363726F6C6C3B0A0909092F2F206F6E6C79207265706C616365206D6573736167657320696620776527726520616C726561647920636F616C657363696E670A090909696628636F616C657363656448544D4C2E6973436F616C657363696E67297B0A09090909696628756E646566696E6564203D3D3D20636F616C657363656448544D4C2E73686F756C645363726F6C6C29207B0A090909090973686F756C645363726F6C6C203D206E656172426F74746F6D28293B0A090909097D20656C7365207B0A090909090973686F756C645363726F6C6C203D20636F616C657363656448544D4C2E73686F756C645363726F6C6C3B0A090909097D0A09090909636F616C657363656448544D4C2E7265706C6163654C6173742868746D6C2C2073686F756C645363726F6C6C293B0A0909097D20656C7365207B0A0909090973686F756C645363726F6C6C203D206E656172426F74746F6D28293B0A090909092F2F5265747269657665207468652063757272656E7420696E73657274696F6E20706F696E742C207468656E2072656D6F76652069740A090909092F2F5468697320726571756972657320746861742074686572652068617665206265656E20616E20696E73657274696F6E20706F696E742E2E2E2069732074686572652061206265747465722077617920746F20726574726965766520746865206C61737420656C656D656E743F202D6576616E64730A0909090976617220696E73657274203D20646F63756D656E742E676574456C656D656E74427949642822696E7365727422293B0A09090909696628696E73657274297B0A090909090976617220706172656E744E6F6465203D20696E736572742E706172656E744E6F64653B0A0909090909706172656E744E6F64652E72656D6F76654368696C6428696E73657274293B0A0909090909766172206C6173744D657373616765203D20646F63756D656E742E676574456C656D656E744279496428224368617422292E6C6173744368696C643B0A0909090909646F63756D656E742E676574456C656D656E744279496428224368617422292E72656D6F76654368696C64286C6173744D657373616765293B0A090909097D0A0A090909092F2F4E6F7720617070656E6420746865206D65737361676520697473656C660A09090909617070656E6448544D4C2868746D6C293B0A0A09090909616C69676E436861742873686F756C645363726F6C6C293B0A0909097D0A09097D0A0A09092F2F4175746F2D7363726F6C6C20746F20626F74746F6D2E2020557365206E656172426F74746F6D20746F2064657465726D696E652069662061207363726F6C6C546F426F74746F6D20697320646573697265642E0A090966756E6374696F6E206E656172426F74746F6D2829207B0A09090972657475726E202820646F63756D656E742E626F64792E7363726F6C6C546F70203E3D202820646F63756D656E742E626F64792E6F6666736574486569676874202D20282077696E646F772E696E6E6572486569676874202A20312E322029202920293B0A09097D0A090966756E6374696F6E207363726F6C6C546F426F74746F6D2829207B0A090909646F63756D656E742E626F64792E7363726F6C6C546F70203D20646F63756D656E742E626F64792E6F66667365744865696768743B0A09097D0A0A09092F2F44796E616D6963616C6C792065786368616E67652074686520616374697665207374796C6573686565740A090966756E6374696F6E207365745374796C657368656574282069642C2075726C2029207B0A09090976617220636F6465203D20223C7374796C652069643D5C2222202B206964202B20225C2220747970653D5C22746578742F6373735C22206D656469613D5C2273637265656E2C7072696E745C223E223B0A0909096966282075726C2E6C656E67746820290A09090909636F6465202B3D202240696D706F72742075726C28205C2222202B2075726C202B20225C2220293B223B0A090909636F6465202B3D20223C2F7374796C653E223B0A0909097661722072616E6765203D20646F63756D656E742E63726561746552616E676528293B0A0909097661722068656164203D20646F63756D656E742E676574456C656D656E747342795461674E616D65282022686561642220292E6974656D2830293B0A09090972616E67652E73656C6563744E6F646528206865616420293B0A09090976617220646F63756D656E74467261676D656E74203D2072616E67652E637265617465436F6E7465787475616C467261676D656E742820636F646520293B0A090909686561642E72656D6F76654368696C642820646F63756D656E742E676574456C656D656E744279496428206964202920293B0A090909686561642E617070656E644368696C642820646F63756D656E74467261676D656E7420293B0A09097D0A0A09092F2A20436F6E766572747320656D6F7469636F6E20696D6167657320746F207465787475616C20656D6F7469636F6E733B20616C6C20656D6F7469636F6E7320696E206D65737361676520696620616C742069732068656C64202A2F0A0909646F63756D656E742E6F6E636C69636B203D2066756E6374696F6E20696D616765436865636B2829207B0A090909766172206E6F6465203D206576656E742E7461726765743B0A090909696620286E6F64652E7461674E616D652E746F4C6F77657243617365282920213D2027696D6727290A0909090972657475726E3B0A0A090909696D61676553776170286E6F64652C2066616C7365293B0A09097D0A0A09092F2A20436F6E7665727473207465787475616C20656D6F7469636F6E7320746F20696D616765732069662074657874546F496D61676573466C616720697320747275652C206F74686572776973652076696365207665727361202A2F0A090966756E6374696F6E20696D61676553776170286E6F64652C2074657874546F496D61676573466C616729207B0A0909097661722073686F756C645363726F6C6C203D206E656172426F74746F6D28293B0A0A09090976617220696D61676573203D205B6E6F64655D3B0A090909696620286576656E742E616C744B657929207B0A090909097768696C6520286E6F64652E696420213D20224368617422202626206E6F64652E706172656E744E6F64652E696420213D20224368617422290A09090909096E6F6465203D206E6F64652E706172656E744E6F64653B0A09090909696D61676573203D206E6F64652E717565727953656C6563746F72416C6C2874657874546F496D61676573466C6167203F20226122203A2022696D6722293B0A0909097D0A0A090909666F7220287661722069203D20303B2069203C20696D616765732E6C656E6774683B20692B2B29207B0A0909090974657874546F496D61676573466C6167203F2074657874546F496D61676528696D616765735B695D29203A20696D616765546F5465787428696D616765735B695D293B0A0909097D0A0A090909616C69676E436861742873686F756C645363726F6C6C293B0A09097D0A0A090966756E6374696F6E2074657874546F496D616765286E6F646529207B0A09090969662028216E6F64652E67657441747472696275746528226973456D6F7469636F6E2229290A0909090972657475726E3B0A0909092F2F537761702074686520696D6167652F746578740A09090976617220696D67203D20646F63756D656E742E637265617465456C656D656E742827696D6727293B0A090909696D672E7365744174747269627574652827737263272C206E6F64652E67657441747472696275746528277372632729293B0A090909696D672E7365744174747269627574652827616C74272C206E6F64652E66697273744368696C642E6E6F646556616C7565293B0A090909696D672E73657441747472696275746528277769647468272C206E6F64652E676574417474726962757465282777696474682729293B0A090909696D672E7365744174747269627574652827686569676874272C206E6F64652E67657441747472696275746528276865696768742729293B0A090909696D672E636C6173734E616D65203D206E6F64652E636C6173734E616D653B0A0909096E6F64652E706172656E744E6F64652E7265706C6163654368696C6428696D672C206E6F6465293B0A09097D0A0A090966756E6374696F6E20696D616765546F54657874286E6F6465290A09097B0A09090969662028636C69656E742E7A6F6F6D496D616765286E6F646529207C7C20216E6F64652E616C74290A0909090972657475726E3B0A0909097661722061203D20646F63756D656E742E637265617465456C656D656E7428276127293B0A090909612E73657441747472696275746528276F6E636C69636B272C2027696D6167655377617028746869732C20747275652927293B0A090909612E7365744174747269627574652827737263272C206E6F64652E67657441747472696275746528277372632729293B0A090909612E73657441747472696275746528276973456D6F7469636F6E272C2074727565293B0A090909612E73657441747472696275746528277769647468272C206E6F64652E676574417474726962757465282777696474682729293B0A090909612E7365744174747269627574652827686569676874272C206E6F64652E67657441747472696275746528276865696768742729293B0A090909612E636C6173734E616D65203D206E6F64652E636C6173734E616D653B0A0909097661722074657874203D20646F63756D656E742E637265617465546578744E6F6465286E6F64652E616C74293B0A090909612E617070656E644368696C642874657874293B0A0909096E6F64652E706172656E744E6F64652E7265706C6163654368696C6428612C206E6F6465293B0A09097D0A0A09092F2F416C69676E206F7572206368617420746F2074686520626F74746F6D206F66207468652077696E646F772E202049662074727565206973207061737365642C20766965772077696C6C20616C736F206265207363726F6C6C656420646F776E0A090966756E6374696F6E20616C69676E436861742873686F756C645363726F6C6C29207B0A0909097661722077696E646F77486569676874203D2077696E646F772E696E6E65724865696768743B0A0A0909096966202877696E646F77486569676874203E203029207B0A0909090976617220636F6E74656E74456C656D656E74203D20646F63756D656E742E676574456C656D656E744279496428274368617427293B0A0909090976617220686569676874446966666572656E6365203D202877696E646F77486569676874202D20636F6E74656E74456C656D656E742E6F6666736574486569676874293B0A0909090969662028686569676874446966666572656E6365203E203029207B0A0909090909636F6E74656E74456C656D656E742E7374796C652E706F736974696F6E203D202772656C6174697665273B0A0909090909636F6E74656E74456C656D656E742E7374796C652E746F70203D20686569676874446966666572656E6365202B20277078273B0A090909097D20656C7365207B0A0909090909636F6E74656E74456C656D656E742E7374796C652E706F736974696F6E203D2027737461746963273B0A090909097D0A0909097D0A0A0909096966202873686F756C645363726F6C6C29207363726F6C6C546F426F74746F6D28293B0A09097D0A0A090977696E646F772E6F6E726573697A65203D2066756E6374696F6E2077696E646F77446964526573697A6528297B0A090909616C69676E4368617428747275652F2A6E656172426F74746F6D28292A2F293B202F2F6E656172426F74746F6D206275676779207769746820696E61637469766520746162730A09097D0A0A090966756E6374696F6E20696E69745374796C652829207B0A090909616C69676E436861742874727565293B0A09090969662821636F616C657363656448544D4C290A09090909636F616C657363656448544D4C203D206E657720436F616C657363656448544D4C28293B0A09097D0A093C2F7363726970743E0A0A093C7374796C6520747970653D22746578742F637373223E0A09092E616374696F6E4D657373616765557365724E616D65207B20646973706C61793A6E6F6E653B207D0A09092E616374696F6E4D657373616765426F64793A6265666F7265207B20636F6E74656E743A222A223B207D0A09092E616374696F6E4D657373616765426F64793A6166746572207B20636F6E74656E743A222A223B207D0A09092A207B20776F72642D777261703A627265616B2D776F72643B20746578742D72656E646572696E673A206F7074696D697A656C65676962696C6974793B207D0A0909696D672E7363616C6564546F466974496D616765207B206865696768743A206175746F3B206D61782D77696474683A2031303025253B207D0A093C2F7374796C653E0A0A093C212D2D2054686973207374796C652069732073686172656420627920616C6C2076617269616E74732E20212D2D3E0A093C7374796C652069643D22626173655374796C652220747970653D22746578742F63737322206D656469613D2273637265656E2C7072696E74223E0A090925400A093C2F7374796C653E0A0A093C212D2D20416C74686F7567682077652063616C6C2074686973206D61696E5374796C6520666F72206C656761637920726561736F6E732C20697427732061637475616C6C79207468652076617269616E74207374796C6520212D2D3E0A093C7374796C652069643D226D61696E5374796C652220747970653D22746578742F63737322206D656469613D2273637265656E2C7072696E74223E0A090940696D706F72742075726C28202225402220293B0A093C2F7374796C653E0A0A3C2F686561643E0A3C626F6479206F6E6C6F61643D22696E69745374796C6528293B22207374796C653D223D3D626F64794261636B67726F756E643D3D223E0A25400A3C6469762069643D2243686174223E0A3C2F6469763E0A25400A3C2F626F64793E0A3C2F68746D6C3E</Hex></ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+</block>
+</RBProject>
