@@ -14,14 +14,14 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Constructor(path As FolderItem)</SourceLine>
-   <SourceLine>if (path.Child("Sounds.plist").Exists) then</SourceLine>
-   <SourceLine>me.CreateSoundSetFromPlist path.Child("Sounds.plist")</SourceLine>
-   <SourceLine>elseif (path.Child(Replace(path.Name, ".AdiumSoundset", ".txt")).Exists) then</SourceLine>
-   <SourceLine>me.CreateSoundSetFromTextFiles path.Child(Replace(path.Name, ".AdiumSoundset", ".txt"))</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
    <SourceLine>me.mDisplayName = Replace(path.DisplayName, ".AdiumSoundset", "")</SourceLine>
    <SourceLine>me.mPath = path</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (path.Child("Sounds.plist").Exists) then</SourceLine>
+   <SourceLine>me.CreateSoundSetFromPlist path.Child("Sounds.plist")</SourceLine>
+   <SourceLine>elseif (path.Child(me.mDisplayName + ".txt").Exists) then</SourceLine>
+   <SourceLine>me.CreateSoundSetFromTextFiles path.Child(me.mDisplayName + ".txt")</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
