@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="456095577">
+ <ObjName>AdiumEmoticonSet</ObjName>
+ <ObjContainerID>986504703</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>AddFileExtension</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function AddFileExtension(path As FolderItem, fileName As String) As FolderItem</SourceLine>
+   <SourceLine>DIM tReturn As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM tExtensions As String = ".png,.jpg,.jpeg,.gif,.tif,.tiff,.tga"</SourceLine>
+   <SourceLine>for i as Integer = 1 to tExtensions.CountFields(",")</SourceLine>
+   <SourceLine>tReturn = path.Child(fileName + tExtensions.NthField(",", i))</SourceLine>
+   <SourceLine>if (tReturn &lt;&gt; Nil) AND (tReturn.Exists) then</SourceLine>
+   <SourceLine>exit for i</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return tReturn</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem, fileName As String</ItemParams>
+  <ItemResult>FolderItem</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(path As FolderItem)</SourceLine>
+   <SourceLine>me.mPath = path</SourceLine>
+   <SourceLine>me.mDict = NEW Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM stream As TextInputStream = TextInputStream.Open(path.Child("Emoticons.plist"))</SourceLine>
+   <SourceLine>DIM line As String</SourceLine>
+   <SourceLine>DIM emoticonIconFileName As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine> line = Trim(stream.ReadLine())</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (NthField(line, "&gt;", 1) = "&lt;key") AND (InStr(line, "AdiumSetVersion") = 0) AND (InStr(line, "Emoticons") = 0) AND (InStr(line, "Equivalents") = 0) AND (InStr(line, "Name") = 0) then  // file name</SourceLine>
+   <SourceLine>emoticonIconFileName = line</SourceLine>
+   <SourceLine>emoticonIconFileName = Replace(emoticonIconFileName, "&lt;key&gt;", "")</SourceLine>
+   <SourceLine>emoticonIconFileName = Replace(emoticonIconFileName, "&lt;/key&gt;", "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif (line = "&lt;array&gt;") then</SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine>line = Trim(stream.ReadLine())</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (NthField(line, "&gt;", 1) = "&lt;string") then</SourceLine>
+   <SourceLine>DIM equivalent As String = line</SourceLine>
+   <SourceLine>equivalent = Replace(equivalent, "&lt;string&gt;", "")</SourceLine>
+   <SourceLine>equivalent = Replace(equivalent, "&lt;/string&gt;", "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mDict.Value(equivalent) = "&lt;img src=""" + me.mPath.Child(emoticonIconFileName).URLPath + """&gt;"</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>loop until stream.EOF</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>loop until stream.EOF</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>stream.Close</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' ' if (path &lt;&gt; Nil) AND (path.Exists) AND (path.Child("Emoticons.plist").Exists) then</SourceLine>
+   <SourceLine>' me.mPath = path</SourceLine>
+   <SourceLine>' me.mDict = NEW Dictionary</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM textInput As TextInputStream = TextInputStream.Open(path.Child("Emoticons.plist"))</SourceLine>
+   <SourceLine>' DIM lineOfText As String</SourceLine>
+   <SourceLine>' DIM tFileName As String</SourceLine>
+   <SourceLine>' DIM tFilePath As FolderItem</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' do</SourceLine>
+   <SourceLine>' ' DIM names As NEW Dictionary</SourceLine>
+   <SourceLine>' lineOfText = textInput.ReadLine().Trim</SourceLine>
+   <SourceLine>' ' break</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' if (lineOfText.NthField("&gt;", 1) = "&lt;key") AND (lineOfText.InStr("AdiumSetVersion") = 0) AND (lineOfText.InStr("Emoticons") = 0) AND (lineOfText.InStr("Equivalents") = 0) AND (lineOfText.InStr("Name") = 0) then  // found the file name</SourceLine>
+   <SourceLine>' tFileName = lineOfText</SourceLine>
+   <SourceLine>' tFileName = tFileName.Replace("&lt;key&gt;", "")</SourceLine>
+   <SourceLine>' tFileName = tFileName.Replace("&lt;/key&gt;", "")</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM tCountFields As Integer = tFileName.CountFields(".")</SourceLine>
+   <SourceLine>' select case tFileName.NthField(".", tCountFields)</SourceLine>
+   <SourceLine>' case "png", "jpg", "jpeg", "gif", "tif", "tiff", "tga"  // it has a file extension</SourceLine>
+   <SourceLine>' tFilePath = path.Child(tFileName)</SourceLine>
+   <SourceLine>' else</SourceLine>
+   <SourceLine>' tFilePath = me.AddFileExtension(path, tFileName)</SourceLine>
+   <SourceLine>' end select</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' ' if (tFileName.NthField(".", tCountFields) &lt;&gt; "png")</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' ' elseif (lineOfText.NthField("&gt;", 1) = "&lt;key") AND (lineOfText.InStr("Name") &gt; 0) then  // emoticon name</SourceLine>
+   <SourceLine>' ' lineOfText = textInput.ReadLine().Trim</SourceLine>
+   <SourceLine>' ' names.Value("emoticonName") = lineOfText.Replace("&lt;string&gt;", "").Replace("&lt;/string&gt;", "")</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' elseif (lineOfText = "&lt;array&gt;") then</SourceLine>
+   <SourceLine>' do</SourceLine>
+   <SourceLine>' lineOfText = textInput.ReadLine().Trim</SourceLine>
+   <SourceLine>' if (lineOfText.NthField("&gt;", 1) = "&lt;string") then</SourceLine>
+   <SourceLine>' DIM emoticon As String = lineOfText.Replace("&lt;string&gt;", "").Replace("&lt;/string&gt;", "")</SourceLine>
+   <SourceLine>' ' me.data.Value(emoticon) = names</SourceLine>
+   <SourceLine>' ' me.data_.Value(emoticon) = fileName</SourceLine>
+   <SourceLine>' if (tFilePath &lt;&gt; Nil) AND (tFilePath.Exists) AND (emoticon.Trim &lt;&gt; "") then</SourceLine>
+   <SourceLine>' me.mDict.Value(emoticon) = "&lt;img src=""" + tFilePath.URLPath + """&gt;"</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' elseif (lineOfText = "&lt;/array&gt;") then</SourceLine>
+   <SourceLine>' exit</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' loop until textInput.EOF  // just incase</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' loop until textInput.EOF</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' textInput.Close</SourceLine>
+   <SourceLine>' ' end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Open</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Open(path As FolderItem) As AdiumEmoticonSet</SourceLine>
+   <SourceLine>DIM returnValue As AdiumEmoticonSet</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) AND (path.Directory) AND (path.Child("Emoticons.plist").Exists) then</SourceLine>
+   <SourceLine>returnValue = NEW AdiumEmoticonSet(path)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>AdiumEmoticonSet</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IconFromKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function IconFromKey(key As String) As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>mDict</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDict As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDict As Dictionary</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>EmoticonsDict</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>EmoticonsDict As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>EmoticonsDict As Dictionary</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDict</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Path</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Path As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Path As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mPath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>kFooter</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kFooter</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>&lt;/dict&gt;&lt;/dict&gt;&lt;/plist&gt;</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>kHeader</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kHeader</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;&lt;plist version="1.0"&gt;&lt;dict&gt;&lt;key&gt;AdiumSetVersion&lt;/key&gt;&lt;integer&gt;1&lt;/integer&gt;&lt;key&gt;Emoticons&lt;/key&gt;&lt;dict&gt;</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>kEmoticonsPlist</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kEmoticonsPlist</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>Emoticons.plist</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+</block>
+</RBProject>
