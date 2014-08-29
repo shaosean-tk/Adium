@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="575510087">
+ <ObjName>AdiumSoundSet</ObjName>
+ <ObjContainerID>986504703</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(path As FolderItem)</SourceLine>
+   <SourceLine>if (path.Child("Sounds.plist").Exists) then</SourceLine>
+   <SourceLine>me.CreateSoundSetFromPlist path.Child("Sounds.plist")</SourceLine>
+   <SourceLine>elseif (path.Child(Replace(path.Name, ".AdiumSoundset", ".txt")).Exists) then</SourceLine>
+   <SourceLine>me.CreateSoundSetFromTextFiles path.Child(Replace(path.Name, ".AdiumSoundset", ".txt"))</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mDisplayName = Replace(path.DisplayName, ".AdiumSoundset", "")</SourceLine>
+   <SourceLine>me.mPath = path</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>CreateSoundSetFromPlist</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub CreateSoundSetFromPlist(path As FolderItem)</SourceLine>
+   <SourceLine>DIM aXmlDocument As NEW XmlDocument(path)</SourceLine>
+   <SourceLine>DIM node As XmlNode = aXmlDocument.FirstChild.FirstChild</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM childNode As XmlNode = node.FirstChild</SourceLine>
+   <SourceLine>while childNode &lt;&gt; Nil</SourceLine>
+   <SourceLine>DIM key As String = childNode.FirstChild.Value</SourceLine>
+   <SourceLine>childNode = childNode.NextSibling</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case key</SourceLine>
+   <SourceLine>case "Info"</SourceLine>
+   <SourceLine>me.mInfo = childNode.FirstChild.Value</SourceLine>
+   <SourceLine>case "Sounds"</SourceLine>
+   <SourceLine>childNode = childNode.FirstChild</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>me.LoadSoundFromKeyAndFileName key, childNode.FirstChild.Value</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (key &lt;&gt; "Sounds") then</SourceLine>
+   <SourceLine>childNode = childNode.NextSibling</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' if (pPath.Child("Sounds.plist") &lt;&gt; Nil) AND (pPath.Child("Sounds.plist").Exists) then</SourceLine>
+   <SourceLine>' DIM tXmlDocument As NEW XmlDocument(pPath.Child("Sounds.plist"))</SourceLine>
+   <SourceLine>' DIM tXmlDocumentNode As XmlNode = tXmlDocument.FirstChild.FirstChild</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM tChildNode As XmlNode = tXmlDocumentNode.FirstChild</SourceLine>
+   <SourceLine>' while tChildNode &lt;&gt; Nil</SourceLine>
+   <SourceLine>' DIM tKey As String = tChildNode.FirstChild.Value</SourceLine>
+   <SourceLine>' tChildNode = tChildNode.NextSibling</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' select case tKey</SourceLine>
+   <SourceLine>' case "Info"</SourceLine>
+   <SourceLine>' me.mInfo = tChildNode.FirstChild.Value</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' case "Sounds"</SourceLine>
+   <SourceLine>' tChildNode = tChildNode.FirstChild</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' case "Message Received", "Chat Received", "ChatReceived"</SourceLine>
+   <SourceLine>' if (me.mChatReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mChatReceived = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Error"</SourceLine>
+   <SourceLine>' if (me.mError = Nil) then</SourceLine>
+   <SourceLine>' me.mError = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Message Sent", "New Mail Received", "MessageReceived"</SourceLine>
+   <SourceLine>' if (me.mMessageReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mMessageReceived = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification Received", "News Posted", "NewsPosted"</SourceLine>
+   <SourceLine>' if (me.mNewsPosted = Nil) then</SourceLine>
+   <SourceLine>' me.mNewsPosted = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Invites You to Chat", "Private Chat Invitation Received", "PrivateChatInvitationReceived"</SourceLine>
+   <SourceLine>' if (me.mPrivateChatInvitationReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mPrivateChatInvitationReceived = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Connected", "Server Connected", "ServerConnected"</SourceLine>
+   <SourceLine>' if (me.mServerConnected = Nil) then</SourceLine>
+   <SourceLine>' me.mServerConnected = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Disconnected", "Server Disconnected", "ServerDisconnected"</SourceLine>
+   <SourceLine>' if (me.mServerDisconnected = Nil) then</SourceLine>
+   <SourceLine>' me.mServerDisconnected = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "File Transfer Complete", "Transfer Finished", "TransferFinished"</SourceLine>
+   <SourceLine>' if (me.mTransferFinished = Nil) then</SourceLine>
+   <SourceLine>' me.mTransferFinished = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "File Transfer Began", "Transfer Started", "TransferStarted"</SourceLine>
+   <SourceLine>' if (me.mTransferStarted = Nil) then</SourceLine>
+   <SourceLine>' me.mTransferStarted = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification received", "User Changed Nick", "UserChangedNick"</SourceLine>
+   <SourceLine>' if (me.mUserChangedNick = Nil) then</SourceLine>
+   <SourceLine>' me.mUserChangedNick = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification received", "User Changed Status", "UserChangedStatus"</SourceLine>
+   <SourceLine>' if (me.mUserChangedStatus = Nil) then</SourceLine>
+   <SourceLine>' me.mUserChangedStatus = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Joins", "Contact Signed On", "User Joined", "UserJoined"</SourceLine>
+   <SourceLine>' if (me.mUserJoined = Nil) then</SourceLine>
+   <SourceLine>' me.mUserJoined = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Leaves", "Contact Signed Off", "User Left", "UserLeft"</SourceLine>
+   <SourceLine>' if (me.mUserLeft = Nil) then</SourceLine>
+   <SourceLine>' me.mUserLeft = pPath.Child(tChildNode.FirstChild.Value).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' end select</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' if (tKey &lt;&gt; "Sounds") then</SourceLine>
+   <SourceLine>' tChildNode = tChildNode.NextSibling</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' wend</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>CreateSoundSetFromTextFiles</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub CreateSoundSetFromTextFiles(path As FolderItem)</SourceLine>
+   <SourceLine>DIM data As String = me.ReadDataFromFile(path)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aRegEx As NEW RegEx</SourceLine>
+   <SourceLine>aRegEx.SearchPattern = "^\""(?P&lt;name&gt;.+)\""\s*(?P&lt;filename&gt;.+)$"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM match As RegExMatch = aRegEx.Search(data)</SourceLine>
+   <SourceLine>while (match &lt;&gt; Nil)</SourceLine>
+   <SourceLine>DIM key As String = match.SubExpressionString(1)</SourceLine>
+   <SourceLine>DIM filename As String = match.SubExpressionString(2)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.LoadSoundFromKeyAndFileName key, filename</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>match = aRegEx.Search()</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' DIM tName As String = pPath.Name.Replace(".AdiumSoundset", ".txt")</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' if (pPath &lt;&gt; Nil) AND (pPath.Child(tName).Exists) then</SourceLine>
+   <SourceLine>' DIM tData As String = pPath.Child(tName).OpenAsText</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM tRegEx As NEW RegEx</SourceLine>
+   <SourceLine>' tRegEx.SearchPattern = "^\""(?P&lt;name&gt;.+)\""\s*(?P&lt;filename&gt;.+)$"</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM tMatch As RegExMatch = tRegEx.Search(tData)</SourceLine>
+   <SourceLine>' while tMatch &lt;&gt; Nil</SourceLine>
+   <SourceLine>' select case tMatch.SubExpressionString(1)</SourceLine>
+   <SourceLine>' case "Message Received", "Chat Received", "ChatReceived"</SourceLine>
+   <SourceLine>' if (me.mChatReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mChatReceived = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Error"</SourceLine>
+   <SourceLine>' if (me.mError = Nil) then</SourceLine>
+   <SourceLine>' me.mError = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Message Sent", "New Mail Received", "MessageReceived"</SourceLine>
+   <SourceLine>' if (me.mMessageReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mMessageReceived = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification Received", "News Posted", "NewsPosted"</SourceLine>
+   <SourceLine>' if (me.mNewsPosted = Nil) then</SourceLine>
+   <SourceLine>' me.mNewsPosted = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Invites You to Chat", "Private Chat Invitation Received", "PrivateChatInvitationReceived"</SourceLine>
+   <SourceLine>' if (me.mPrivateChatInvitationReceived = Nil) then</SourceLine>
+   <SourceLine>' me.mPrivateChatInvitationReceived = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Connected", "Server Connected", "ServerConnected"</SourceLine>
+   <SourceLine>' if (me.mServerConnected = Nil) then</SourceLine>
+   <SourceLine>' me.mServerConnected = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Disconnected", "Server Disconnected", "ServerDisconnected"</SourceLine>
+   <SourceLine>' if (me.mServerDisconnected = Nil) then</SourceLine>
+   <SourceLine>' me.mServerDisconnected = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "File Transfer Complete", "Transfer Finished", "TransferFinished"</SourceLine>
+   <SourceLine>' if (me.mTransferFinished = Nil) then</SourceLine>
+   <SourceLine>' me.mTransferFinished = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "File Transfer Began", "Transfer Started", "TransferStarted"</SourceLine>
+   <SourceLine>' if (me.mTransferStarted = Nil) then</SourceLine>
+   <SourceLine>' me.mTransferStarted = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification received", "User Changed Nick", "UserChangedNick"</SourceLine>
+   <SourceLine>' if (me.mUserChangedNick = Nil) then</SourceLine>
+   <SourceLine>' me.mUserChangedNick = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Notification received", "User Changed Status", "UserChangedStatus"</SourceLine>
+   <SourceLine>' if (me.mUserChangedStatus = Nil) then</SourceLine>
+   <SourceLine>' me.mUserChangedStatus = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Joins", "Contact Signed On", "User Joined", "UserJoined"</SourceLine>
+   <SourceLine>' if (me.mUserJoined = Nil) then</SourceLine>
+   <SourceLine>' me.mUserJoined = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' case "Contact Leaves", "Contact Signed Off", "User Left", "UserLeft"</SourceLine>
+   <SourceLine>' if (me.mUserLeft = Nil) then</SourceLine>
+   <SourceLine>' me.mUserLeft = pPath.Child(tMatch.SubExpressionString(2)).OpenAsSound</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>' end select</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' tMatch = tRegEx.Search()</SourceLine>
+   <SourceLine>' wend</SourceLine>
+   <SourceLine>' end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Open</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Open(path As FolderItem) As AdiumSoundSet</SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) AND (path.Directory) then</SourceLine>
+   <SourceLine>if (path.Child("Sounds.plist").Exists) OR (path.Child(Replace(path.Name, ".AdiumSoundset", ".txt")).Exists) then</SourceLine>
+   <SourceLine>Return NEW AdiumSoundSet(path)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>AdiumSoundSet</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LoadSoundFromKeyAndFileName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub LoadSoundFromKeyAndFileName(key As String, soundFileName As String)</SourceLine>
+   <SourceLine>DIM aSound As Sound</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.mPath.Child(soundFileName).Exists) then</SourceLine>
+   <SourceLine>aSound = me.mPath.Child(soundFileName).OpenAsSound</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case key</SourceLine>
+   <SourceLine>case "Message Received", "Chat Received", "ChatReceived"</SourceLine>
+   <SourceLine>me.mChatReceived = aSound</SourceLine>
+   <SourceLine>case "Error"</SourceLine>
+   <SourceLine>me.mError = aSound</SourceLine>
+   <SourceLine>case "Message Sent", "New Mail Received", "MessageReceived"</SourceLine>
+   <SourceLine>me.mMessageReceived = aSound</SourceLine>
+   <SourceLine>case "Notification Received", "News Posted", "NewsPosted"</SourceLine>
+   <SourceLine>me.mNewsPosted = aSound</SourceLine>
+   <SourceLine>case "Contact Invites You to Chat", "Private Chat Invitation Received", "PrivateChatInvitationReceived"</SourceLine>
+   <SourceLine>me.mPrivateChatInvitationReceived = aSound</SourceLine>
+   <SourceLine>case "Connected", "Server Connected", "ServerConnected"</SourceLine>
+   <SourceLine>me.mServerConnected = aSound</SourceLine>
+   <SourceLine>case "Disconnected", "Server Disconnected", "ServerDisconnected"</SourceLine>
+   <SourceLine>me.mServerDisconnected = aSound</SourceLine>
+   <SourceLine>case "File Transfer Complete", "Transfer Finished", "TransferFinished"</SourceLine>
+   <SourceLine>me.mTransferFinished = aSound</SourceLine>
+   <SourceLine>case "File Transfer Began", "Transfer Started", "TransferStarted"</SourceLine>
+   <SourceLine>me.mTransferStarted = aSound</SourceLine>
+   <SourceLine>case "Notification received", "User Changed Nick", "UserChangedNick"</SourceLine>
+   <SourceLine>me.mUserChangedNick = aSound</SourceLine>
+   <SourceLine>case "Notification received", "User Changed Status", "UserChangedStatus"</SourceLine>
+   <SourceLine>me.mUserChangedStatus = aSound</SourceLine>
+   <SourceLine>case "Contact Joins", "Contact Signed On", "User Joined", "UserJoined"</SourceLine>
+   <SourceLine>me.mUserJoined = aSound</SourceLine>
+   <SourceLine>case "Contact Leaves", "Contact Signed Off", "User Left", "UserLeft"</SourceLine>
+   <SourceLine>me.mUserLeft = aSound</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String, soundFileName As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ReadDataFromFile</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ReadDataFromFile(path As FolderItem) As String</SourceLine>
+   <SourceLine>DIM returnValue As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) AND (not path.Directory) then</SourceLine>
+   <SourceLine>DIM stream As TextInputStream = TextInputStream.Open(path)</SourceLine>
+   <SourceLine>returnValue = stream.ReadAll()</SourceLine>
+   <SourceLine>stream.Close</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>ChatReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ChatReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ChatReceived As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mChatReceived</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mChatReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mChatReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mChatReceived As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DisplayName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisplayName As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisplayName As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mDisplayName</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mDisplayName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDisplayName As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDisplayName As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Error</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Error As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Error As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mError</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mError</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mError As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mError As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Info</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Info As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Info As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mInfo</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mInfo</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInfo As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInfo As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>MessageReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>MessageReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>MessageReceived As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mMessageReceived</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mMessageReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMessageReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMessageReceived As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>NewsPosted</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>NewsPosted As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>NewsPosted As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mNewsPosted</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mNewsPosted</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mNewsPosted As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mNewsPosted As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Path</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Path As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Path As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mPath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>PrivateChatInvitationReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>PrivateChatInvitationReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>PrivateChatInvitationReceived As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mPrivateChatInvitationReceived</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mPrivateChatInvitationReceived</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPrivateChatInvitationReceived As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPrivateChatInvitationReceived As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>ServerConnected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ServerConnected As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ServerConnected As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mServerConnected</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mServerConnected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mServerConnected As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mServerConnected As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>ServerDisconnected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ServerDisconnected As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ServerDisconnected As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mServerDisconnected</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mServerDisconnected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mServerDisconnected As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mServerDisconnected As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>TransferFinished</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>TransferFinished As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>TransferFinished As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mTransferFinished</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mTransferFinished</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mTransferFinished As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mTransferFinished As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>TransferStarted</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>TransferStarted As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>TransferStarted As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mTransferStarted</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mTransferStarted</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mTransferStarted As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mTransferStarted As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>UserChangedNick</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>UserChangedNick As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>UserChangedNick As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mUserChangedNick</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mUserChangedNick</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mUserChangedNick As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mUserChangedNick As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>UserChangedStatus</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>UserChangedStatus As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>UserChangedStatus As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mUserChangedStatus</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mUserChangedStatus</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mUserChangedStatus As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mUserChangedStatus As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>UserJoined</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>UserJoined As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>UserJoined As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mUserJoined</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mUserJoined</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mUserJoined As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mUserJoined As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>UserLeft</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>UserLeft As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>UserLeft As Sound</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mUserLeft</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mUserLeft</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mUserLeft As Sound</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mUserLeft As Sound</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>ChatReceived</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DisplayName</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Error</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Info</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>MessageReceived</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>NewsPosted</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>PrivateChatInvitationReceived</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ServerConnected</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ServerDisconnected</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TransferFinished</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TransferStarted</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>UserChangedNick</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>UserChangedStatus</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>UserJoined</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>UserLeft</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Sound</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
+</RBProject>
