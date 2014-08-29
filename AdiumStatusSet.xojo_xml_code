@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="940188254">
+ <ObjName>AdiumStatusSet</ObjName>
+ <ObjContainerID>986504703</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(path As FolderItem)</SourceLine>
+   <SourceLine>me.LoadFromPath path</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LoadFromPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub LoadFromPath(path As FolderItem)</SourceLine>
+   <SourceLine>me.mPath = path</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM inputStreamForIconPlist As TextInputStream = TextInputStream.Open(path.Child("Icons.plist"))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine>DIM lineOfText As String = Trim(inputStreamForIconPlist.ReadLine())</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (lineOfText = "&lt;key&gt;Tabs&lt;/key&gt;") then</SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine>DIM key As String = Trim(inputStreamForIconPlist.ReadLine())</SourceLine>
+   <SourceLine>key = Replace(key, "&lt;key&gt;", "")</SourceLine>
+   <SourceLine>key = Replace(key, "&lt;/key&gt;", "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case key</SourceLine>
+   <SourceLine>case "Generic Available"</SourceLine>
+   <SourceLine>me.mAvailable = me.OpenPictureFromData(Trim(inputStreamForIconPlist.ReadLine()))</SourceLine>
+   <SourceLine>case "Generic Away"</SourceLine>
+   <SourceLine>me.mAway = me.OpenPictureFromData(Trim(inputStreamForIconPlist.ReadLine()))</SourceLine>
+   <SourceLine>case "Idle"</SourceLine>
+   <SourceLine>me.mIdle = me.OpenPictureFromData(Trim(inputStreamForIconPlist.ReadLine()))</SourceLine>
+   <SourceLine>case "Offline"</SourceLine>
+   <SourceLine>me.mOffline = me.OpenPictureFromData(Trim(inputStreamForIconPlist.ReadLine()))</SourceLine>
+   <SourceLine>case "Content"</SourceLine>
+   <SourceLine>me.mContent = me.OpenPictureFromData(Trim(inputStreamForIconPlist.ReadLine()))</SourceLine>
+   <SourceLine>case "&lt;/dict&gt;"</SourceLine>
+   <SourceLine>exit</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine>loop until inputStreamForIconPlist.EOF</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>loop until inputStreamForIconPlist.EOF</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Open</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Open(path As FolderItem) As AdiumStatusSet</SourceLine>
+   <SourceLine>DIM returnValue As AdiumStatusSet</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) AND (path.Directory) AND (path.Child("Icons.plist").Exists) then</SourceLine>
+   <SourceLine>returnValue = NEW AdiumStatusSet(path)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult>AdiumStatusSet</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>OpenPictureFromData</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function OpenPictureFromData(data As String) As Picture</SourceLine>
+   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>data = Replace(data, "&lt;string&gt;", "")</SourceLine>
+   <SourceLine>data = Replace(data, "&lt;/string&gt;", "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM count As Integer = me.mPath.Count</SourceLine>
+   <SourceLine>for i as Integer = 1 to count</SourceLine>
+   <SourceLine>DIM fileName As String = me.mPath.Item(i).DisplayName</SourceLine>
+   <SourceLine>if (Left(fileName, Len(data)) = data) then</SourceLine>
+   <SourceLine>returnValue = Picture.Open(me.mPath.Item(i))</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As String</ItemParams>
+  <ItemResult>Picture</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Update</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Update(path As FolderItem)</SourceLine>
+   <SourceLine>if (path &lt;&gt; Nil) AND (path.Exists) AND (path.Directory) AND (path.Child("Icons.plist").Exists) then</SourceLine>
+   <SourceLine>me.LoadFromPath path</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>path As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Property>
+  <ItemName>Available</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Available As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Available As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mAvailable</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Away</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Away As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Away As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mAway</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Content</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Content As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Content As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mContent</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Idle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Idle As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Idle As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mIdle</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mAvailable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mAvailable As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mAvailable As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mAway</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mAway As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mAway As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mContent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mContent As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mContent As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mIdle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mIdle As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mIdle As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mOffline</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mOffline As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mOffline As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPath As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPath As FolderItem</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Offline</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Offline As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Offline As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mOffline</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Path</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Path As FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Path As FolderItem</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mPath</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Available</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Away</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Content</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Idle</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Offline</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
+</RBProject>
