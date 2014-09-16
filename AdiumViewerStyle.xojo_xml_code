@@ -667,7 +667,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDefaultFontFamily As String = "System"</SourceLine>
+   <SourceLine>mDefaultFontFamily As String</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -681,7 +681,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDefaultFontSize As Integer = 13</SourceLine>
+   <SourceLine>mDefaultFontSize As Integer</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -709,7 +709,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDisableCombineConsecutive As Boolean = FALSE</SourceLine>
+   <SourceLine>mDisableCombineConsecutive As Boolean</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -723,7 +723,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDisableCustomBackground As Boolean = FALSE</SourceLine>
+   <SourceLine>mDisableCustomBackground As Boolean</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -737,7 +737,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDisplayNameForNoVariant As String = "Default"</SourceLine>
+   <SourceLine>mDisplayNameForNoVariant As String</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -903,7 +903,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mShowUserIcons As Boolean = TRUE</SourceLine>
+   <SourceLine>mShowUserIcons As Boolean</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
